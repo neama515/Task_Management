@@ -1,0 +1,175 @@
+//fonts
+$primary_font :'raleway';
+$header1: 2.813rem;     //45px
+$header2: 2rem;         //32px
+$header3: 1.75rem;      //28px
+$header4: 1.375rem;     //22px
+$header5: 1.25rem;      //20px
+$header6: 1.125rem;     //18px
+$paragraph: 1rem;       //16px
+$helperText: 0.8125rem;  //12px
+$copyRightText: 0.6875rem;//11px
+
+//colors
+/*blue pallette*/
+$blue500: #639eb0; //darker
+$blue400:  #87C2D4;
+$blue300:#93cee0 ;
+$blue200: #9fdaed;
+$blue100: #abe7f9; //lighter
+
+/*blue pallette*/
+/* 639eb0 6faabc 7bb6c8 87c2d4 93cee0 9fdaed abe7f9 */
+
+//black and white pallette
+$black: #000000;
+$grey500: #3F3F3F;
+$grey400: #848484;
+$grey300: #959595;
+$grey200: #b3b3b3;
+$grey100: #F8F8F8;
+$white:#FFFFFF;
+
+//other colors
+$green : #2BB673;
+$blue : #5DCCDB;
+$yellow : #F2CF60;
+$pink : #F2607A;
+
+$Lgreen : #EAF8F1;
+$Lblue : #EFFAFB;
+$Lyellow : #FEFAEF;
+$Lpink : #FEEFF2;
+
+body{
+    margin: 0;
+    padding: 0;
+    font-family: $primary_font;
+    font-size: $header6;   
+}
+// Input Fields
+@mixin inputField($width, $height, $color, $bg, $border, $bgHover, $bgActive, $borderActive) {
+    font-family: $primary_font;
+    border-radius: 8px; // Slightly rounded corners
+    width: $width;
+    height: $height;
+    color: $color;
+    background-color: $bg;
+    font-size: $paragraph;
+    font-weight: 400;
+    border: 1px solid $border;
+    padding-left: 15px; // Adjusted padding for better spacing
+    margin-top: 4px;
+    outline: none; // Removes default focus outline
+    display:block;
+  
+    &::placeholder {
+      color: $grey200;
+      font-size: $copyRightText;
+    }
+  
+    &:hover {
+      transition: 0.2s ease-in-out;
+      background-color: $bgHover;
+    }
+  
+    &:focus {
+      cursor: text;
+      background-color: $bgActive;
+      border: 1px solid $borderActive; 
+      // outline: 2px solid $green300; 
+      box-shadow: 0 0 5px rgba($blue300, 0.5); // Optional glow effect
+    }
+  }
+  
+  // Applying the mixin to the Full Name input
+  .inputField_pass {
+    @include inputField(380px, 38px, $black, $white, $grey200, $grey100, $white, $blue300);
+  }
+  .inputField_subTask {
+    @include inputField(605px, 38px, $black, $white, $grey200, $grey100, $white, $blue300);
+  }
+  //Buttons
+@mixin btn($width, $height, $color, $bg, $font, $border, $bgHover){
+    font-family: $primary_font;
+    border-radius: 10px;
+    width: $width;
+    height:$height;
+    color: $color;
+    background-color: $bg;
+    font-size: $font;
+    font-weight: 700;
+    border: 2px solid $border;
+    cursor: pointer;
+  
+    &:hover{
+      transition: 0.04s ease-out;
+      transition-delay: 0.04s;
+      background-color: $bgHover;
+      box-shadow: rgba(0, 0, 0, 0.22) 0px 2px 7px;
+    }
+  }
+  
+  .save_btn{
+    @include btn(160px, 45px, $white,$blue400, $paragraph, transparent , $blue500)
+  
+  }
+  
+  .boardListContainer {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .boardList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .boardSection {
+    flex: 1 1 300px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f3f4f6;
+
+  }
+  
+  .taskCard {
+    background-color: #ffffff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+ 
+  
+  input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .addbutton {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: #639eb0;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  
+    &:hover {
+      background-color: #2f5966;
+    }
+  }
+  
+  .addSection {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+  }
+
+
+  

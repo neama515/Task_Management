@@ -1,0 +1,253 @@
+//fonts
+$primary_font :'raleway';
+$header1: 2.813rem;     //45px
+$header2: 2rem;         //32px
+$header3: 1.75rem;      //28px
+$header4: 1.375rem;     //22px
+$header5: 1.25rem;      //20px
+$header6: 1.125rem;     //18px
+$paragraph: 1rem;       //16px
+$helperText: 0.8125rem;  //12px
+$copyRightText: 0.6875rem;//11px
+
+//colors
+/*blue pallette*/
+$blue500: #639eb0; //darker
+$blue400:  #87C2D4;
+$blue300:#93cee0 ;
+$blue200: #9fdaed;
+$blue100: #abe7f9; //lighter
+
+/*blue pallette*/
+/* 639eb0 6faabc 7bb6c8 87c2d4 93cee0 9fdaed abe7f9 */
+
+//black and white pallette
+$black: #000000;
+$grey500: #3F3F3F;
+$grey400: #848484;
+$grey300: #959595;
+$grey200: #b3b3b3;
+$grey100: #F8F8F8;
+$white:#FFFFFF;
+
+//other colors
+$green : #2BB673;
+$blue : #5DCCDB;
+$yellow : #F2CF60;
+$pink : #F2607A;
+
+$Lgreen : #EAF8F1;
+$Lblue : #EFFAFB;
+$Lyellow : #FEFAEF;
+$Lpink : #FEEFF2;
+
+body{
+    margin: 0;
+    padding: 0;
+    font-family: $primary_font;
+    // font-size: $header6; 
+}
+.sign-up-container,.sign_in_container {
+  // background-image: url(https://images.unsplash.com/photo-1502945015378-0e284ca1a5be?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+  background: linear-gradient(90deg, #87C2D4, white);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-repeat: no-repeat;
+  
+}
+
+
+//Buttons
+@mixin btn($width, $height, $color, $bg, $font, $border, $bgHover){
+  font-family: $primary_font;
+  border-radius: 10px;
+  width: $width;
+  height:$height;
+  color: $color;
+  background-color: $bg;
+  font-size: $font;
+  font-weight: 700;
+  border: 2px solid $border;
+  cursor: pointer;
+
+  &:hover{
+    transition: 0.04s ease-out;
+    transition-delay: 0.04s;
+    background-color: $bgHover;
+    box-shadow: rgba(0, 0, 0, 0.22) 0px 2px 7px;
+  }
+}
+
+.primary_btn {
+  @include btn(219px, 62px, $white, $black, $header4, transparent, $blue400);
+}
+
+.nav_btn {
+  @include btn(167px, 50px, $white, $blue400, $header4, transparent,$blue500 );
+}
+
+.outline_btn{
+  @include btn(219px, 62px, $black,$white , $header4, $grey200 , $grey100)
+  
+}
+.sign_btn{
+  @include btn(395px, 45px, $white,$blue400, $paragraph, transparent , $blue500)
+}
+
+.signGoogle_btn{
+  @include btn(395px, 45px, $black,$white , $paragraph, $grey200 , $grey100)
+}
+
+.continue_btn{
+  @include btn(400px, 45px, $white,$blue400 , $header4, transparent , $blue300)
+}
+
+.other_btn{
+  @include btn(167px, 50px, $white, $blue400, $header4, transparent, $blue300);
+}
+
+
+
+// Input Fields
+@mixin inputField($width, $height, $color, $bg, $border, $bgHover, $bgActive, $borderActive) {
+  font-family: $primary_font;
+  border-radius: 8px; // Slightly rounded corners
+  width: $width;
+  height: $height;
+  color: $color;
+  background-color: $bg;
+  font-size: $paragraph;
+  font-weight: 400;
+  border: 1px solid $border;
+  padding-left: 15px; // Adjusted padding for better spacing
+  margin-top: 4px;
+  outline: none; // Removes default focus outline
+  display:block;
+
+  &::placeholder {
+    color: $grey200;
+    font-size: $copyRightText;
+  }
+
+  &:hover {
+    transition: 0.2s ease-in-out;
+    background-color: $bgHover;
+  }
+
+  &:focus {
+    cursor: text;
+    background-color: $bgActive;
+    border: 1px solid $borderActive; 
+    // outline: 2px solid $green300; 
+    box-shadow: 0 0 5px rgba($blue300, 0.5); // Optional glow effect
+  }
+}
+
+// Applying the mixin to the Full Name input
+.inputField_pass {
+  @include inputField(394px, 38px, $black, $white, $grey200, $grey100, $white, $blue300);
+}
+
+.inputField_sign{
+  @include inputField(394px, 38px, $black,$white , $grey200 , $grey100, $blue100, $blue100);
+
+}
+
+.selectField_sign1{
+  @include inputField(394px, 38px, $black,$white , $grey200 , $grey100, $blue100, $blue100);
+  font-size: 15px;
+	appearance:none;
+	-webkit-appearance:none;
+	-moz-appearance:none;
+	-ms-appearance:none;
+    background-position: calc(100% - 12px) center !important;
+    background: url("data:image/svg+xml,<svg height='10px' width='10px' viewBox='0 0 16 16' fill='%23000000' xmlns='http://www.w3.org/2000/svg'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>") no-repeat;
+    padding: 8px 32px 8px 16px;
+}
+/* To remove the arrow of select element in IE */
+.select1::-ms-expand {
+  display: none;
+}
+
+
+
+.selectField_sign{
+ 
+  @include inputField(395px, 40px, $black,$white , $grey200 , $grey100, $blue100, $black);
+  font-size: $helperText;
+  color:$grey200;
+  margin-right: 20px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: transparent;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position-x: 97%;
+  background-position-y: 8px;
+  cursor: pointer;
+
+  &:focus{
+    color:$grey500;
+  }
+ 
+  
+/*text privacy and sign */
+}
+.helper-txt-sign{
+  font-size: 12px;
+}
+/* labels */
+
+.label{
+  font-size: $copyRightText;
+  font-weight: bold;
+  color: $grey500;
+  padding-left:2px;
+}
+.primary_text_sign{
+  font-size: 22px;
+}
+
+.secondary_text_sign{
+  font-size: 10px;
+}
+.orLight{
+  color: #b3b3b3;
+  font-weight: lighter;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+#con {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  
+  }
+  #con li{
+      list-style: none;
+      padding: 0 20px;
+      position: relative;
+  }
+  #con li .active{
+      text-decoration: none;
+      font-family: $primary_font;
+      font-size:$header6 ;
+      color: $black;
+      transition: 0.3s ease-in-out;
+      cursor: pointer;
+
+      &:hover{
+          text-decoration: underline;
+        
+
+        }   
+  }
+ .txt_home_anim{
+  font-family:$primary_font ;
+  
+
+  }
+ 
