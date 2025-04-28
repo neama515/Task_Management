@@ -3,17 +3,16 @@ import { usercontext } from "../../Components/UserContext/UserContext";
 import axios from "axios";
 import { Button } from "flowbite-react";
 import styles from "../../CSS/Profile.module.scss";
-import SideBar from "../../Components/SideBar/SideBar";
 import Profile_nav from "../../Components/Profile_nav/Profile_nav";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Card, Dropdown } from "flowbite-react";
-import { Checkbox, Label, Modal, TextInput } from "flowbite-react";
+import {  Label, Modal } from "flowbite-react";
 
 import { useRef, useState } from "react";
 export default function Projects() {
   const [copiedCode, setCopiedCode] = useState(null);
 
-  const name = localStorage.getItem("name");
+  const username = localStorage.getItem("name");
   let navigate = useNavigate();
   const [selectedProject, setSelectedProject] = useState({
     id: "",
@@ -21,7 +20,6 @@ export default function Projects() {
     type: "",
     description: "",
   });
-  const [searchTerm, setSearchTerm] = useState("");
   const [str1, setStr1] = useState("");
   const [flag, setFlag] = useState(false);
   const [obj, setObj] = useState("");
@@ -33,9 +31,7 @@ export default function Projects() {
   const [openModal2, setOpenModal2] = useState(false);
   const [openModal3, setOpenModal3] = useState(false);
   const location = useLocation();
-  console.log("====================================");
-  console.log(obj);
-  console.log("====================================");
+
   const [formDataa, setFormDataa] = useState({
     name: "",
     type: "",
@@ -101,9 +97,10 @@ export default function Projects() {
         setToken(token);
         setObj((form) => [...form, res.data]);
         getProjects();
-        console.log("====================================");
+        console.log("================project====================");
         console.log(res.data);
         console.log("====================================");
+        localStorage.setItem("createdBy", username);
       })
       .catch((err) => {
         if (err.response) {
@@ -158,9 +155,13 @@ export default function Projects() {
   }
   async function getProjectById(id) {
     axios
-      .post(`http://localhost:3000/api/projects/join-by-code`,{Code:id} ,{
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      .post(
+        `http://localhost:3000/api/projects/join-by-code`,
+        { Code: id },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
       .then((res) => {
         setFlag(true);
         setStr1("You joined successfully");
@@ -193,12 +194,9 @@ export default function Projects() {
     handleCopyCode(id);
     setOpenModal3(true);
     axios
-      .get(
-        `http://localhost:3000/api/projects/code/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+      .get(`http://localhost:3000/api/projects/code/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         setToken(token);
         setCode(res.data.code);
@@ -225,12 +223,9 @@ export default function Projects() {
 
   function deleteProject(projectId) {
     axios
-      .delete(
-        `http://localhost:3000/api/projects/${projectId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+      .delete(`http://localhost:3000/api/projects/${projectId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then(() => {
         setObj((obj) => obj.filter((p) => p.id !== projectId));
       })
@@ -251,12 +246,9 @@ export default function Projects() {
   }
   function leaveProject(projectId) {
     axios
-      .delete(
-        `http://localhost:3000/api/projects/leave/${projectId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+      .delete(`http://localhost:3000/api/projects/leave/${projectId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then(() => {
         setObj((obj) => obj.filter((p) => p.id !== projectId));
       })
@@ -275,25 +267,19 @@ export default function Projects() {
         );
     }
   }
- 
-
-
 
   function goBoard(id, name, createdBy) {
     axios
-      .get(
-        `http://localhost:3000/api/sections/getAll/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
+      .get(`http://localhost:3000/api/sections/getAll/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         console.log("====================================");
         console.log(res);
         console.log("====================================");
 
         localStorage.setItem("selectedProjectName", name);
-        localStorage.setItem("createdBy", createdBy);
+        localStorage.setItem("createdBy", username);
 
         navigate(`/board/${id}`, { state: { projectName: name } });
       })
@@ -325,8 +311,6 @@ export default function Projects() {
     <>
       <Profile_nav location={location} />
       <section className="p-5 text-center">
-      
-
         <div
           href="#"
           className="w-[99%] mx-auto mt-4 h-auto shadow-[#93cee0] shadow-sm border rounded-md px-2 py-4 border-[#93cee0]"
@@ -487,7 +471,7 @@ export default function Projects() {
                       >
                         Get Code
                       </Dropdown.Item>
-                     
+
                       {ob.createdBy == name ? (
                         <Dropdown.Item onClick={() => deleteProject(ob.id)}>
                           Delete
