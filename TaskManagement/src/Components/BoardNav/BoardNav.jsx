@@ -34,6 +34,7 @@ export default function BoardNav() {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setMembers(response.data.members || []);
+      
     } catch (err) {
       console.error("Error fetching members:", err.response?.data || err.message);
     }
@@ -86,7 +87,6 @@ export default function BoardNav() {
     }
   };
 
-
   const handleCopyCode = (code) => {
     navigator.clipboard
       .writeText(code)
@@ -101,13 +101,13 @@ export default function BoardNav() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:5017/api/Project/GetCode?Id=${projectId}`,
+        `http://localhost:3000/api/projects/code/${projectId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      const code = response.data.code;
+      const code = response.data;
       handleCopyCode(code);
       toast.success("Code copied to clipboard!");
     } catch (err) {

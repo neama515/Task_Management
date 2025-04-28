@@ -17,14 +17,10 @@ export default function Teams() {
   const [obj, setObj] = useState("");
   const [members, setMembers] = useState([]);
   const [teamMembers, setTeamMembers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchTermMembers, setSearchTermMembers] = useState("");
-  const [searchTermMembers2, setSearchTermMembers2] = useState("");
   const [searchTeamMembers, setSearchTeamMembers] = useState([]);
   const [searchMembers, setSearchMembers] = useState([]);
   const createdBy = localStorage.getItem("createdBy");
   const name = localStorage.getItem("name");
-
   const [openModal, setOpenModal] = useState(false);
   const [openModal1, setOpenModal1] = useState(false);
   const [openModal2, setOpenModal2] = useState(false);
@@ -237,85 +233,7 @@ export default function Teams() {
         }
       });
   }
-
-  // function deleteMember(memberId, teamId, member) {
-  //   axios
-  //     .delete(`http://localhost:5017/api/Teams/RemoveMember`, {
-  //       data: {
-  //         memberId,
-  //         teamId,
-  //         projectId,
-  //       },
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //     })
-  //     .then((res) => {
-  //       setTeamMembers((teamMembers) =>
-  //         teamMembers?.filter((p) => p.id !== memberId)
-  //       );
-
-  //       getTeams(projectId);
-  //       setOpenModal3(false);
-  //       alert("Member is removed");
-  //     })
-  //     .catch((err) => {
-  //       console.error("Error", err.response?.data || err);
-  //       if (err.response?.data?.errors) {
-  //         console.error("Validation Errors:", err.response.data.errors);
-  //       }
-  //     });
-  // }
-
-  function searchTeams(searchTerm) {
-    const encodedSearchTerm = encodeURIComponent(searchTerm);
-
-    axios
-      .get(
-        `http://localhost:5017/api/Teams/SearchForTeam?projectId=${projectId}&teamName=${encodedSearchTerm}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      .then((res) => {
-        setObj(res.data);
-      })
-      .catch((err) => {
-        getTeams(projectId);
-
-        console.error("Error updating project:", err.response?.data || err);
-        if (err.response?.data?.errors) {
-          console.error("Validation Errors:", err.response.data.errors);
-        }
-        alert(err.response?.data || err);
-      });
-  }
-  function searchTeamsMembers2(searchTermMembers) {
-    const encodedSearchTermm = encodeURIComponent(searchTermMembers);
-
-    axios
-      .get(
-        `http://localhost:5017/api/Teams/SearchForMemberInTeam?teamId=${selectedTeamId}&memberName=${encodedSearchTermm}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      .then((res) => {
-        setSearchTeamMembers(res.data); // Set new values
-        setFlag(true);
-        console.log(res.data);
-      })
-      .catch((err) => {
-        getTeams(projectId);
-
-        console.error("Error updating project:", err.response?.data || err);
-        if (err.response?.data?.errors) {
-          console.error("Validation Errors:", err.response.data.errors);
-        }
-        alert(err.response?.data || err);
-      });
-  }
+  
 
   useEffect(() => {
     console.log("Updated searchTeamMembers:", searchTeamMembers);
@@ -329,34 +247,7 @@ export default function Teams() {
     console.log("Updated searchTeamMembers:", searchMembers);
     fetchMembers(projectId);
   }, [searchMembers]);
-  function searchTeamsMembers(searchTermMembers) {
-    const encodedSearchTermm = encodeURIComponent(searchTermMembers);
 
-    axios
-      .get(
-        `http://localhost:5017/api/Teams/SearchForMemberInProject?ProjectId=${projectId}&memberName=${encodedSearchTermm}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      )
-      .then((res) => {
-        console.log("res");
-        console.log(res.data);
-
-        setSearchMembers(res.data);
-        console.log("memafter");
-        setFlag1(true);
-      })
-      .catch((err) => {
-        getTeams(projectId);
-
-        console.error("Error updating project:", err.response?.data || err);
-        if (err.response?.data?.errors) {
-          console.error("Validation Errors:", err.response.data.errors);
-        }
-        alert(err.response?.data || err);
-      });
-  }
   useEffect(() => {
     getTeams(projectId);
   }, []);

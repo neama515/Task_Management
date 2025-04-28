@@ -1206,14 +1206,7 @@ export default function Board() {
                             {isSelected && (
                               <FaCheckCircle className="text-[#639eb0] ml-auto w-5 h-5" />
                             )}
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                              }}
-                              className="text-red-500 hover:text-red-700 transition-colors"
-                            >
-                              <FaTrash className="w-4 h-4" />
-                            </button>
+                            
                           </div>
                         );
                       })}

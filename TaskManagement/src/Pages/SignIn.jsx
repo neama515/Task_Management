@@ -51,7 +51,6 @@ export default function SignIn() {
     console.log(data);
   }
  
-
   let validation = Yup.object().shape({
     email: Yup.string().email("Email is invalid").required(),
     password: Yup.string()
@@ -149,9 +148,6 @@ export default function SignIn() {
               </a>
             </div>
           </form>
-
-      
-         
 
           <p
             className={`text-gray-600  text-center mt-4 font-medium ${styles.helper_txt_sign}`}
