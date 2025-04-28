@@ -23,18 +23,14 @@ export default function Members() {
   async function fetchMembers() {
     try {
       const response = await axios.get(
-        `http://localhost:5017/api/Board/GetMembersOfProject?Id=${projectId}`,
+        `http://localhost:3000/api/projects/members/${projectId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      if (response.data) {
-        setProjectOwner(response.data.createdBy);
-      }
-
-      if (Array.isArray(response.data.members)) {
-        setMembers(response.data.members);
+      if (Array.isArray(response.data)) {
+        setMembers(response.data);
       } else {
         console.error("Unexpected API response format:", response.data);
         setMembers([]);
@@ -47,29 +43,6 @@ export default function Members() {
     }
   }
 
-  function handleRemoveClick(memberId) {
-    setSelectedMember(memberId);
-    setShowConfirm(true);
-  }
-
-  async function removeMember() {
-    if (!selectedMember) return;
-
-    try {
-      await axios.delete(
-        `http://localhost:5017/api/Board/DeleteMember?ProjectId=${projectId}&MemberId=${selectedMember}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      setMembers((prev) => prev.filter((m) => m.id !== selectedMember));
-    } catch (err) {
-      console.error("Error removing member:", err.response?.data || err);
-    }
-
-    setShowConfirm(false);
-  }
   useEffect(() => {
     if (token) fetchMembers();
   }, [projectId, token]);

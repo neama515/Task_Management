@@ -15,9 +15,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useFormik } from "formik";
 import { usercontext } from "../Components/UserContext/UserContext";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
-import googleLogo from "../Images/Logo-google-icon-PNG.png";
+
+
 
 export default function SignIn() {
   let { setToken } = useContext(usercontext);
@@ -51,30 +50,7 @@ export default function SignIn() {
       });
     console.log(data);
   }
-  const handleGoogleSignIn = async (response) => {
-    try {
-      const idToken = response.credential;
-      console.log("Received Google Token:", idToken);
-
-      const requestBody = { idToken };
-      console.log("Sending Request Body:", requestBody);
-
-      const { data } = await axios.post(
-        "http://localhost:5017/api/Account/google-login",
-        requestBody,
-        { headers: { "Content-Type": "application/json" } }
-      );
-
-      console.log("Backend Response:", data);
-
-      localStorage.setItem("token", data.token);
-      // localStorage.setItem("name", data.fullName);
-      navigate("/profile");
-    } catch (error) {
-      console.error("Google Sign-Up Error:", error.response?.data || error);
-    }
-  };
-
+ 
   let validation = Yup.object().shape({
     email: Yup.string().email("Email is invalid").required(),
     password: Yup.string()
@@ -167,34 +143,11 @@ export default function SignIn() {
               {isLoading ? <i className="fas fa-spin fa-spinner"></i> : "Login"}
             </button>
             <div className="text-center flex flex-col">
-              <a href="/ForgetPassword" className="underline text-gray-600">
-                Forget Password
-              </a>
               <a href="/signup" className="underline text-gray-600">
                 Register
               </a>
             </div>
           </form>
-
-          {/* Divider */}
-          <div className="relative flex items-center  justify-center">
-            <div className={styles.orLight}>━━━━━━━ or ━━━━━━━</div>
-          </div>
-
-          {/* Google Login Button */}
-          <div className="flex justify-center mt-4">
-            <div className="scale-125">
-              {" "}
-              {/* ✅ Scales the button 25% bigger */}
-              <GoogleLogin
-                onSuccess={handleGoogleSignIn}
-                onError={() => console.log("Google Sign-In Failed")}
-                size="large"
-                shape="pill"
-                theme="outline"
-              />
-            </div>
-          </div>
 
           <p
             className={`text-gray-600  text-center mt-4 font-medium ${styles.helper_txt_sign}`}

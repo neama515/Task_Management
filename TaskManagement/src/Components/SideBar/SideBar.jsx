@@ -45,42 +45,7 @@ export default function SideBar() {
           </div>
           <div className="h-full px-3 py-4 overflow-y-auto ">
             <ul className=" font-medium">
-              <li>
-                <Link
-                  to="/tasks"
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                >
-                  <i className="fa-solid fa-house w-5 text-[#93cee0]"></i>
-                  <span className="ml-3">Home</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="#"
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                >
-                  <i className="fa-solid fa-bell w-5 justify-self-center place-self-center self-center text-[#93cee0]"></i>
-                  <span className="ml-3">Notifications</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/conversations"
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                >
-                  <i className="fa-solid fa-envelope w-5 text-[#93cee0]"></i>{" "}
-                  <span className="ml-3">Messages</span>
-                </Link>
-              </li>{" "}
-              <li>
-                <Link
-                  to="/meeting"
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                >
-                  <i className="fa-solid fa-video w-5 text-[#93cee0]"></i>{" "}
-                  <span className="ml-3">Meet</span>
-                </Link>
-              </li>
+             
               <hr className="border-gray-300 my-5" />
               <div className="text-black flex justify-between">
                 {" "}
@@ -119,23 +84,8 @@ export default function SideBar() {
                 </div>
               )}
               <hr className="border-gray-300 my-5" />
-              <h3 className="text-[#93cee0] pl-3 font-semibold">
-                Recommendations
-              </h3>
-              <ul className="text-black pl-4 py-1">
-                <li className="py-2">
-                  <Link to="">
-                    <i className="fa-solid fa-address-card w-5 text-[#93cee0]"></i>
-                    <span> Jobs you might like</span>
-                  </Link>
-                </li>
-                <li className="py-2">
-                  <Link to="">
-                    <i className="fa-solid w-5 fa-magnifying-glass text-[#93cee0]"></i>
-                    <span> Find people</span>
-                  </Link>
-                </li>
-              </ul>
+            
+           
             </ul>
           </div>
         </aside>

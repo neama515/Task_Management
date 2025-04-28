@@ -14,96 +14,75 @@ export default function ProfileEdit() {
   let token = localStorage.getItem("token");
   const location = useLocation();
 
-  function saveChangesHandle(formValues) {
-    console.log(formValues.values);
-    console.log("hellllllllllllllllll");
-    console.log('====================================');
+  function saveChangesHandle(values) {
     const formData = new FormData();
-
-    formData.append("fullName", formValues.FullName);
-    formData.append("jobRole", formValues.JobRole);
-    formData.append("gender", formValues.Gender);
-    formData.append("birthDate", formValues.BirthDate);
-    formData.append("phoneNumber", formValues.PhoneNumber);
-    formData.append("aboutMe", formValues.AboutMe);
-    if (formValues.Image instanceof File) {
-      formData.append("image", formValues.Image);
+    
+    formData.append("fullName", values.fullName);
+    formData.append("jobRole", values.jobRole);
+    formData.append("gender", values.gender);
+    formData.append("birthDate", values.birthDate);
+    formData.append("phoneNumber", values.phoneNumber);
+    formData.append("aboutMe", values.aboutMe);
+    
+    if (values.image instanceof File) {
+      formData.append("image", values.image);
     }
-    console.log("Final FormData to API:", formData.fullName);
-    if (formValues.Password) {
-      formData.append("password", formValues.Password);
-      formData.append("confirmPassword", formValues.ConfirmPassword);
+    
+    if (values.password) {
+      formData.append("password", values.password);
+      formData.append("confirmPassword", values.confirmPassword);
     }
 
-    axios
-      .put(`http://localhost:3000/api/users/editProfile`, formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        console.log(res.data);
-        navigate("/profile");
-        setToken(token);
-        toast.success("Profile updated successfully!");
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.error("Response Data:", err.response.data);
-          toast.error(`Error: ${JSON.stringify(err.response.data.errors)}`);
-        }
-      });
+    axios.put(`http://localhost:3000/api/users/editProfile`, formData, {
+      headers: { 
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then((res) => {
+      navigate("/profile");
+      setToken(token);
+      toast.success("Profile updated successfully!");
+    })
+    .catch((err) => {
+      if (err.response) {
+        toast.error(`Error: ${err.response.data.message || 'Something went wrong'}`);
+      } else {
+        toast.error("Server connection error");
+      }
+    });
   }
 
   const validationSchema = Yup.object({
-    FullName: Yup.string().required("Full Name is required"),
-
-    JobRole: Yup.string().required("Job Role is required"),
-
-    Gender: Yup.number()
-      .oneOf([0, 1], "Invalid gender selection") // 0 = Male, 1 = Female
-      .required("Gender is required"),
-
-    BirthDate: Yup.date()
-      .required("Birth Date is required")
-      .typeError("Invalid Birth Date format (YYYY-MM-DD)"),
-
-    PhoneNumber: Yup.string()
-      .matches(
-        /^01[1250][0-9]{8}$/,
-        "Phone number must be a valid Egyptian number"
-      )
-      .nullable(),
-
-    AboutMe: Yup.string()
-      .max(500, "About Me must be less than 500 characters")
-      .nullable(),
-
-    Country: Yup.string().required("Country is required"),
-
-    City: Yup.string().required("City is required"),
-
-    Language: Yup.string().nullable(),
-
-    linkedIn: Yup.string().url("Invalid Linkedin URL").nullable(),
-
-    Github: Yup.string().url("Invalid Github URL").nullable(),
-
-    Protofilo: Yup.string().url("Invalid Protofilo URL").nullable(),
-
-    Password: Yup.string()
-      .nullable()
-      .test(
-        "password-strength",
-        "Password must be 8-15 characters, with at least one uppercase letter, one lowercase letter, one digit, and one special character.",
-        (value) =>
-          !value ||
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$/.test(value)
-      ),
-
-    ConfirmPassword: Yup.string()
-      .nullable()
-      .oneOf([Yup.ref("Password"), null], "Passwords do not match"),
-
-    Image: Yup.mixed()
+    fullName: Yup.string().required("Full Name is required"),
+    jobRole: Yup.string().required("Job Role is required"),
+    gender: Yup.string()
+  .oneOf(["male", "female", "other"], "Invalid gender selection")
+  .required("Gender is required"),
+  birthDate: Yup.date()
+    .required("Birth Date is required")
+    .typeError("Invalid Birth Date format (YYYY-MM-DD)"),
+  phoneNumber: Yup.string()
+    .matches(/^01[1250][0-9]{8}$/, "Phone number must be a valid Egyptian number")
+    .nullable()
+    .required("Phone Number is required"),
+  aboutMe: Yup.string()
+    .max(500, "About Me must be less than 500 characters")
+    .nullable()
+    .required("About Me is required"),
+    password: Yup.string()
+    .nullable()
+    .test(
+      "password-strength",
+      "Password must be 8-15 characters, with at least one uppercase, one lowercase, one digit, and one special character",
+      (value) => !value || /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,15}$/.test(value)
+    ),
+  
+    confirmPassword: Yup.string()
+    .nullable()
+    .oneOf([Yup.ref("password"), null], "Passwords do not match"),
+  
+    image: Yup.mixed()
       .nullable()
       .test(
         "fileType",
@@ -111,102 +90,55 @@ export default function ProfileEdit() {
         (value) =>
           !value || (value && ["image/jpeg", "image/png"].includes(value.type))
       ),
+  
 
-    CVFile: Yup.mixed()
-      .nullable()
-      .test(
-        "fileType",
-        "Only PDF files are allowed",
-        (value) => !value || (value && value.type === "application/pdf")
-      ),
-
-    Experiences: Yup.array().of(
-      Yup.object({
-        experienceName: Yup.string(),
-        experienceTitle: Yup.string(),
-        ExperiencestartDate: Yup.date().when(
-          ["experienceName", "experienceTitle"],
-          {
-            is: (name, title) => !!name || !!title,
-            then: (schema) => schema.required("Start date is required"),
-          }
-        ),
-        experienceEndDate: Yup.date()
-          .min(
-            Yup.ref("ExperiencestartDate"),
-            "End date must be after start date"
-          )
-          .when(["experienceName", "experienceTitle"], {
-            is: (name, title) => !!name || !!title,
-            then: (schema) => schema.required("End date is required"),
-          }),
-      })
-    ),
-
-    Skills: Yup.array()
-      .of(Yup.string())
-      .min(1, "At least one skill is required"),
   });
-
   let formik = useFormik({
     initialValues: {
-      FullName: "",
-      JobRole: "",
-      Gender: "",
-      BirthDate: "",
-      PhoneNumber: "",
-      Password: "",
-      ConfirmPassword: "",
-      AboutMe: "",
-      Image: "",
+      fullName: "",
+      jobRole: "",
+      gender: "",
+      birthDate: "",
+      phoneNumber: "",
+      password: "",
+      confirmPassword: "",
+      aboutMe: "",
+      image: "",
     },
     validationSchema,
     onSubmit: saveChangesHandle,
   });
 
-
-
-  // handle profile img
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      formik.setFieldValue("Image", file);
+      formik.setFieldValue("image", file);
     }
   };
 
-  // handle cancel button
   const handleCancel = () => {
     formik.resetForm();
   };
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:3000/api/users/profile`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        const profileData = res.data;
-        console.log(res.data);
-
-        formik.setValues({
-          FullName: profileData.fullName || "",
-          JobRole: profileData.jobRole || "",
-          Gender: profileData.gender ?? 0,
-          BirthDate: profileData.birthDate || "",
-          PhoneNumber: profileData.phoneNumber || "",
-          AboutMe: profileData.aboutMe || "",
-         
-       
-          Image: profileData.image || "",
-          CVFile: null,
-       
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-
-        console.error("Error fetching profile:", err);
+    axios.get(`http://localhost:3000/api/users/profile`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .then((res) => {
+      const profileData = res.data;
+      formik.setValues({
+        fullName: profileData.fullName || "",
+        jobRole: profileData.jobRole || "",
+        gender: profileData.gender ?? 0,
+        birthDate: profileData.birthDate || "",
+        phoneNumber: profileData.phoneNumber || "",
+        aboutMe: profileData.aboutMe || "",
+        image: profileData.image || "",
       });
+    })
+    .catch((err) => {
+      console.error("Error fetching profile:", err);
+    });
   }, []);
 
   return (
@@ -218,27 +150,27 @@ export default function ProfileEdit() {
             <input
               type="file"
               onChange={handleImageUpload}
-              id="ImageUpload"
+              id="imageUpload"
               hidden
             />
-            {formik.values.Image && typeof formik.values.Image === "string" ? (
+            {formik.values.image && typeof formik.values.image === "string" ? (
               <img
-                src={formik.values.Image}
+                src={formik.values.image}
                 alt="Profile"
                 className={`${style.profileImg} bg-gray-100`}
               />
-            ) : formik.values.Image instanceof File ? (
+            ) : formik.values.image instanceof File ? (
               <img
-                src={URL.createObjectURL(formik.values.Image)}
+                src={URL.createObjectURL(formik.values.image)}
                 alt="Profile"
                 className={`${style.profileImg} bg-gray-100`}
               />
             ) : null}
             <label
-              htmlFor="ImageUpload"
+              htmlFor="imageUpload"
               className="text-black underline cursor-pointer hover:text-[#639eb0] my-3"
             >
-              Upload your photo{" "}
+              Upload your photo
             </label>
           </div>
         </div>
@@ -248,26 +180,26 @@ export default function ProfileEdit() {
             <form onSubmit={formik.handleSubmit}>
               <div>
                 <span className="px-5 pt-2 font-bold text-center mb-3">
-                  Personal information:{" "}
+                  Personal information:
                 </span>
 
                 <div className="flex md:gap-10 mx-auto justify-center">
                   <div className="flex md:gap-10 mx-auto justify-center mb-1">
                     <div className="mb-1">
-                      <label htmlFor="FullName" className={`${style.label}`}>
+                      <label htmlFor="fullName" className={`${style.label}`}>
                         FullName
                       </label>
                       <input
                         onChange={formik.handleChange}
-                        value={formik.values.FullName}
+                        value={formik.values.fullName}
                         onBlur={formik.handleBlur}
                         type="text"
-                        id="FullName"
-                        name="FullName"
+                        id="fullName"
+                        name="fullName"
                         className={`${style.inputField_long}`}
                         placeholder="Enter your FullName"
                       />
-                      {formik.touched.FullName && formik.errors.FullName && (
+                      {formik.touched.fullName && formik.errors.fullName && (
                         <div
                           className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 my-2"
                           role="alert"
@@ -284,7 +216,7 @@ export default function ProfileEdit() {
                           <span className="sr-only">Info</span>
                           <div>
                             <span className="font-medium">
-                              {formik.errors.FullName}
+                              {formik.errors.fullName}
                             </span>
                           </div>
                         </div>
@@ -294,20 +226,20 @@ export default function ProfileEdit() {
                 </div>
                 <div className="flex sm:flex-col md:flex-row md:gap-10 mx-auto justify-center items-center">
                   <div className="">
-                    <label htmlFor="JobRole" className={`${style.label}`}>
+                    <label htmlFor="jobRole" className={`${style.label}`}>
                       Job Title
                     </label>
                     <input
                       onChange={formik.handleChange}
-                      value={formik.values.JobRole}
+                      value={formik.values.jobRole}
                       onBlur={formik.handleBlur}
                       type="text"
-                      id="JobRole"
-                      name="JobRole"
+                      id="jobRole"
+                      name="jobRole"
                       className={`${style.inputField_pass}`}
                       placeholder="Enter your JobRole"
                     />
-                    {formik.touched.JobRole && formik.errors.JobRole && (
+                    {formik.touched.jobRole && formik.errors.jobRole && (
                       <div
                         className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 my-2"
                         role="alert"
@@ -324,31 +256,30 @@ export default function ProfileEdit() {
                         <span className="sr-only">Info</span>
                         <div>
                           <span className="font-medium">
-                            {formik.errors.JobRole}
+                            {formik.errors.jobRole}
                           </span>
                         </div>
                       </div>
                     )}
                   </div>
                   <div className="">
-                    <label htmlFor="Gender" className={`${style.label}`}>
+                    <label htmlFor="gender" className={`${style.label}`}>
                       Gender
                     </label>
                     <select
-                      onChange={(e) =>
-                        formik.setFieldValue("Gender", Number(e.target.value))
-                      }
-                      value={formik.values.Gender}
-                      onBlur={formik.handleBlur}
-                      id="Gender"
-                      name="Gender"
-                      className={`${style.selectField_sign1}`}
-                    >
-                      <option value="">Select Gender</option>
-                      <option value="0">Male</option>
-                      <option value="1">Female</option>
-                    </select>
-                    {formik.touched.Gender && formik.errors.Gender && (
+  onChange={formik.handleChange}
+  value={formik.values.gender}
+  onBlur={formik.handleBlur}
+  id="gender"
+  name="gender"
+  className={`${style.selectField_sign1}`}
+>
+  <option value="">Select Gender</option>
+  <option value="male">Male</option>
+  <option value="female">Female</option>
+  <option value="other">Other</option>
+</select>
+                    {formik.touched.gender && formik.errors.gender && (
                       <div
                         className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 my-2"
                         role="alert"
@@ -365,7 +296,7 @@ export default function ProfileEdit() {
                         <span className="sr-only">Info</span>
                         <div>
                           <span className="font-medium">
-                            {formik.errors.Gender}
+                            {formik.errors.gender}
                           </span>
                         </div>
                       </div>
@@ -374,20 +305,20 @@ export default function ProfileEdit() {
                 </div>
                 <div className="flex gap-10 mx-auto justify-center mb-1">
                   <div className="mb-1">
-                    <label htmlFor="BirthDate" className={`${style.label}`}>
+                    <label htmlFor="birthDate" className={`${style.label}`}>
                       BirthDate
                     </label>
                     <input
                       onChange={formik.handleChange}
-                      value={formik.values.BirthDate}
+                      value={formik.values.birthDate}
                       onBlur={formik.handleBlur}
                       type="date"
-                      id="BirthDate"
-                      name="BirthDate"
+                      id="birthDate"
+                      name="birthDate"
                       className={`${style.inputField_long}`}
                       placeholder="Enter your BirthDate"
                     />
-                    {formik.touched.BirthDate && formik.errors.BirthDate && (
+                    {formik.touched.birthDate && formik.errors.birthDate && (
                       <div
                         className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 my-2"
                         role="alert"
@@ -404,7 +335,7 @@ export default function ProfileEdit() {
                         <span className="sr-only">Info</span>
                         <div>
                           <span className="font-medium">
-                            {formik.errors.BirthDate}
+                            {formik.errors.birthDate}
                           </span>
                         </div>
                       </div>
@@ -413,21 +344,21 @@ export default function ProfileEdit() {
                 </div>
                 <div className="flex gap-10 mx-auto justify-center mb-1">
                   <div className="mb-1">
-                    <label htmlFor="PhoneNumber" className={`${style.label}`}>
+                    <label htmlFor="phoneNumber" className={`${style.label}`}>
                       PhoneNumber
                     </label>
                     <input
                       onChange={formik.handleChange}
-                      value={formik.values.PhoneNumber}
+                      value={formik.values.phoneNumber}
                       onBlur={formik.handleBlur}
                       type="tel"
-                      id="PhoneNumber"
-                      name="PhoneNumber"
+                      id="phoneNumber"
+                      name="phoneNumber"
                       className={`${style.inputField_long}`}
                       placeholder="Enter your PhoneNumber"
                     />
-                    {formik.touched.PhoneNumber &&
-                      formik.errors.PhoneNumber && (
+                    {formik.touched.phoneNumber &&
+                      formik.errors.phoneNumber && (
                         <div
                           className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 my-2"
                           role="alert"
@@ -444,7 +375,7 @@ export default function ProfileEdit() {
                           <span className="sr-only">Info</span>
                           <div>
                             <span className="font-medium">
-                              {formik.errors.PhoneNumber}
+                              {formik.errors.phoneNumber}
                             </span>
                           </div>
                         </div>
@@ -453,21 +384,21 @@ export default function ProfileEdit() {
                 </div>
                 <div className="flex sm:flex-col md:flex-row md:gap-10 mx-auto justify-center items-center">
                   <div className="mb-1">
-                    <label htmlFor="Password" className={`${style.label}`}>
+                    <label htmlFor="password" className={`${style.label}`}>
                       Change Password
                     </label>
                     <input
                       onChange={formik.handleChange}
-                      value={formik.values.Password}
+                      value={formik.values.password}
                       onBlur={formik.handleBlur}
                       autoComplete="off"
                       type="password"
-                      name="Password"
-                      id="Password"
+                      name="password"
+                      id="password"
                       className="inputField_pass"
                       placeholder="Enter your password"
                     />
-                    {formik.touched.Password && formik.errors.Password && (
+                    {formik.touched.password && formik.errors.password && (
                       <div
                         className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 my-2"
                         role="alert"
@@ -484,7 +415,7 @@ export default function ProfileEdit() {
                         <span className="sr-only">Info</span>
                         <div>
                           <span className="font-medium">
-                            {formik.errors.Password}
+                            {formik.errors.password}
                           </span>
                         </div>
                       </div>
@@ -492,23 +423,23 @@ export default function ProfileEdit() {
                   </div>
                   <div className="mb-1">
                     <label
-                      htmlFor="ConfirmPassword"
+                      htmlFor="confirmPassword"
                       className={`${style.label}`}
                     >
                       Confirm Password
                     </label>
                     <input
                       onChange={formik.handleChange}
-                      value={formik.values.ConfirmPassword}
+                      value={formik.values.confirmPassword}
                       onBlur={formik.handleBlur}
                       type="password"
-                      id="ConfirmPassword"
-                      name="ConfirmPassword"
+                      id="confirmPassword"
+                      name="confirmPassword"
                       className="inputField_pass"
                       placeholder="repeat your password"
                     />
-                    {formik.touched.ConfirmPassword &&
-                      formik.errors.ConfirmPassword && (
+                    {formik.touched.confirmPassword &&
+                      formik.errors.confirmPassword && (
                         <div
                           className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 my-2"
                           role="alert"
@@ -525,7 +456,7 @@ export default function ProfileEdit() {
                           <span className="sr-only">Info</span>
                           <div>
                             <span className="font-medium">
-                              {formik.errors.ConfirmPassword}
+                              {formik.errors.confirmPassword}
                             </span>
                           </div>
                         </div>
@@ -535,23 +466,23 @@ export default function ProfileEdit() {
               </div>
               <div>
                 <span className="px-5 pt-2 font-bold text-center mb-3">
-                  About Me:{" "}
+                  About Me:
                 </span>
                 <div className="flex gap-10 mx-auto justify-center mb-1">
                   <div className="mb-1">
-                    <label htmlFor="AboutMe" className={`${style.label}`}>
+                    <label htmlFor="aboutMe" className={`${style.label}`}>
                       Tell us about yourself
                     </label>
                     <textarea
                       onChange={formik.handleChange}
-                      value={formik.values.AboutMe}
+                      value={formik.values.aboutMe}
                       onBlur={formik.handleBlur}
-                      id="AboutMe"
-                      name="AboutMe"
+                      id="aboutMe"
+                      name="aboutMe"
                       rows="5"
                       className={`${style.inputField_long}`}
                     ></textarea>
-                    {formik.touched.AboutMe && formik.errors.AboutMe && (
+                    {formik.touched.aboutMe && formik.errors.aboutMe && (
                       <div
                         className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 my-2"
                         role="alert"
@@ -568,7 +499,7 @@ export default function ProfileEdit() {
                         <span className="sr-only">Info</span>
                         <div>
                           <span className="font-medium">
-                            {formik.errors.AboutMe}
+                            {formik.errors.aboutMe}
                           </span>
                         </div>
                       </div>
@@ -587,7 +518,6 @@ export default function ProfileEdit() {
                 </button>
                 <button
                   type="submit"
-                  onClick={() => saveChangesHandle(formik)}
                   className={`${style.edit_btn} sm:mt-4 `}
                 >
                   Save Changes
