@@ -237,50 +237,37 @@ export default function Teams() {
         }
       });
   }
-  function deleteMember(memberId, teamId, member) {
-    axios
-      .delete(`http://localhost:5017/api/Teams/RemoveMember`, {
-        data: {
-          memberId,
-          teamId,
-          projectId,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
-      .then((res) => {
-        setTeamMembers((teamMembers) =>
-          teamMembers?.filter((p) => p.id !== memberId)
-        );
 
-        getTeams(projectId);
-        setOpenModal3(false);
-        alert("Member is removed");
-      })
-      .catch((err) => {
-        console.error("Error", err.response?.data || err);
-        if (err.response?.data?.errors) {
-          console.error("Validation Errors:", err.response.data.errors);
-        }
-      });
-  }
-  function handleSearchChange(event) {
-    const value = event.target.value;
-    setSearchTerm(value);
-    searchTeams(value);
-  }
-  function handleSearchChangeMembers(event) {
-    const value = event.target.value;
-    setSearchTermMembers(value);
-    searchTeamsMembers(value);
-  }
-  function handleSearchChangeMembers2(event) {
-    const value = event.target.value;
-    setSearchTermMembers2(value);
-    searchTeamsMembers2(value);
-  }
+  // function deleteMember(memberId, teamId, member) {
+  //   axios
+  //     .delete(`http://localhost:5017/api/Teams/RemoveMember`, {
+  //       data: {
+  //         memberId,
+  //         teamId,
+  //         projectId,
+  //       },
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         "Content-Type": "application/json",
+  //       },
+  //     })
+  //     .then((res) => {
+  //       setTeamMembers((teamMembers) =>
+  //         teamMembers?.filter((p) => p.id !== memberId)
+  //       );
+
+  //       getTeams(projectId);
+  //       setOpenModal3(false);
+  //       alert("Member is removed");
+  //     })
+  //     .catch((err) => {
+  //       console.error("Error", err.response?.data || err);
+  //       if (err.response?.data?.errors) {
+  //         console.error("Validation Errors:", err.response.data.errors);
+  //       }
+  //     });
+  // }
+
   function searchTeams(searchTerm) {
     const encodedSearchTerm = encodeURIComponent(searchTerm);
 

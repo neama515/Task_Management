@@ -8,7 +8,6 @@ import axios from "axios";
 import * as Yup from "yup";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { usercontext } from "../Components/UserContext/UserContext";
-import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 
 
 export default function SignUp() {
@@ -76,29 +75,6 @@ export default function SignUp() {
     onSubmit: handleRegister,
   });
 
-  const handleGoogleSignUp = async (response) => {
-    try {
-      const idToken = response.credential; // Google ID Token
-      console.log("Received Google Token:", idToken); // ✅ Log token
-
-      const requestBody = { idToken }; // ✅ Correct request body
-      console.log("Sending Request Body:", requestBody); // ✅ Log request body
-
-      const { data } = await axios.post(
-        "http://localhost:5017/api/Account/google-login",
-        requestBody,
-        { headers: { "Content-Type": "application/json" } }
-      );
-
-      console.log("Backend Response:", data);
-
-      localStorage.setItem("token", data.token);
-      // localStorage.setItem("name", data.fullName);
-      navigate("/addinfo");
-    } catch (error) {
-      console.error("Google Sign-Up Error:", error.response?.data || error);
-    }
-  };
 
   return (
     <>
@@ -115,27 +91,7 @@ export default function SignUp() {
             Enter your details below to create your account
           </p>
 
-          {/* Google Login Button */}
-          <div className="flex justify-center mt-4">
-            <div className="scale-125">
-              {" "}
-              {/* ✅ Scales the button 25% bigger */}
-              <GoogleLogin
-                text="signup_with"
-                onSuccess={handleGoogleSignUp}
-                onError={() => console.log("Google Sign-In Failed")}
-                size="Medium" // ✅ Largest available size
-                shape="pill" // ✅ Fully rounded
-                theme="outline" // ✅ Forces a clean style
-              />
-            </div>
-          </div>
-
-          {/* Divider */}
-          <div className="relative flex items-center  justify-center">
-            <div className={styles.orLight}>━━━━━━━ or ━━━━━━━</div>
-          </div>
-
+         
           {errorApi ? (
             <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50">
               {errorApi}

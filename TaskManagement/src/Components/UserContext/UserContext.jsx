@@ -11,7 +11,7 @@ export default function UserContext({ children }) {
     async function fetchUserProfile() {
       if (token) {
         try {
-          const response = await axios.get("http://localhost:5017/api/Profile/GetProfile", {
+          const response = await axios.get("http://localhost:3000/api/users/profile", {
             headers: { Authorization: `Bearer ${token}` },
           });
 

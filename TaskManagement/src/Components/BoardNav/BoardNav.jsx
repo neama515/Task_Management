@@ -30,7 +30,7 @@ export default function BoardNav() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:5017/api/Board/GetMembersOfProject?Id=${projectId}`,
+        `http://localhost:3000/api/projects/members/${projectId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setMembers(response.data.members || []);
@@ -41,11 +41,7 @@ export default function BoardNav() {
 
   const tabs = [
     { name: "Board", path: `/Board/${projectId}` },
-    { name: "List", path: `/list/${projectId}` },
-    { name: "Conversations", path: `/conversations` },
     { name: "Teams", path: `/teams/${projectId}` },
-    { name: "Reports", path: `/reports/${projectId}` },
-    { name: "Dashboard", path: `/dashboard/${projectId}` },
   ];
 
   const toggleOptions = () => {
@@ -170,12 +166,7 @@ export default function BoardNav() {
                   >
                     Get Code
                   </button>
-                  <button
-                    className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
-                    onClick={openInviteModal}
-                  >
-                    Invite User
-                  </button>
+                 
                 </div>
               )}
             </div>
@@ -198,21 +189,6 @@ export default function BoardNav() {
           ))}
         </ul>
         <ul className="flex items-center gap-6 text-xl">
-          <li className="cursor-pointer">
-          <Link to={`/meeting/${projectId}`}>
-            <FaVideo />
-            </Link>
-          </li>
-          <li className="cursor-pointer">
-            <Link to={`/calendar/${projectId}`}>
-              <AiOutlineCalendar />
-            </Link>
-          </li>
-          <li className="cursor-pointer">
-            <Link to={`/files/${projectId}`}>
-              <FaRegFolder />
-            </Link>
-          </li>
           <li className="cursor-pointer">
             <Link to={`/members/${projectId}`}>
               <FaUsers />

@@ -31,7 +31,7 @@ let navigate=useNavigate()
   async function profileInfo() {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:5017/api/Profile/GetProfile`, {
+      const res = await axios.get(`http://localhost:3000/api/users/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setToken(token);

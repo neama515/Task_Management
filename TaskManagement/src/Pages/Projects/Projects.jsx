@@ -3,13 +3,11 @@ import { usercontext } from "../../Components/UserContext/UserContext";
 import axios from "axios";
 import { Button } from "flowbite-react";
 import styles from "../../CSS/Profile.module.scss";
-import SideBar from "../../Components/SideBar/SideBar";
 import Profile_nav from "../../Components/Profile_nav/Profile_nav";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Card, Dropdown } from "flowbite-react";
-import { Checkbox, Label, Modal, TextInput } from "flowbite-react";
-
-import { useRef, useState } from "react";
+import {  Label, Modal } from "flowbite-react";
+import { useState } from "react";
 export default function Projects() {
   const [copiedCode, setCopiedCode] = useState(null);
 
